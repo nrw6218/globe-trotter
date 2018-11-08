@@ -1,17 +1,17 @@
 "use strict";
 
-var handleDomo = function handleDomo(e) {
+var handleTrip = function handleTrip(e) {
     e.preventDefault();
 
     $("#domoMessage").animate({ width: 'hide' }, 350);
 
-    if ($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoHeight").val() == '' || $("#domoWeight").val() == '') {
-        handleError("RAWR! All fields are required");
+    if ($("#tripTitle").val() == '' || $("#tripLocation").val() == '' || $("#tripDate").val() == '') {
+        handleError("All fields are required!");
         return false;
     }
 
     sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-        loadDomosFromServer($('token').val());
+        loadTripsFromServer($('token').val());
     });
 
     return false;
@@ -20,98 +20,93 @@ var handleDomo = function handleDomo(e) {
 var handleDelete = function handleDelete(e) {
     e.preventDefault();
 
-    sendAjax('POST', '/deleteDomo', $('#deleteDomo').serialize(), function () {
-        loadDomosFromServer($('token').val());
+    sendAjax('POST', '/deleteTrip', $('#deleteTrip').serialize(), function () {
+        loadTripsFromServer($('token').val());
     });
 
     return false;
 };
 
-var DomoForm = function DomoForm(props) {
+var TripForm = function TripForm(props) {
     return React.createElement(
         "form",
         { id: "domoForm",
-            onSubmit: handleDomo,
-            name: "domoForm",
+            onSubmit: handleTrip,
+            name: "tripForm",
             action: "/maker",
             method: "POST",
             className: "domoForm"
         },
         React.createElement(
             "label",
-            { htmlFor: "name" },
+            { htmlFor: "title" },
             "Name: "
         ),
-        React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
+        React.createElement("input", { id: "tripTitle", type: "text", name: "title", placeholder: "Title" }),
         React.createElement(
             "label",
-            { htmlFor: "age" },
-            "Age: "
+            { htmlFor: "title" },
+            "Location: "
         ),
-        React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+        React.createElement("input", { id: "tripLocation", type: "text", name: "location", placeholder: "Location" }),
         React.createElement(
             "label",
-            { htmlFor: "height" },
-            "Height: "
+            { htmlFor: "title" },
+            "Details: "
         ),
-        React.createElement("input", { id: "domoHeight", type: "text", name: "height", placeholder: "Domo Height" }),
+        React.createElement("input", { id: "tripDetails", type: "text", name: "details", placeholder: "Details" }),
         React.createElement(
             "label",
-            { htmlFor: "weight" },
-            "Weight: "
+            { htmlFor: "startDate" },
+            "Date: "
         ),
-        React.createElement("input", { id: "domoWeight", type: "text", name: "weight", placeholder: "Domo Weight" }),
+        React.createElement("input", { id: "tripDate", type: "date", name: "startDate" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
+        React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Trip" })
     );
 };
 
-var DomoList = function DomoList(props) {
-    if (props.domos.length === 0) {
+var TripList = function TripList(props) {
+    if (props.trips.length === 0) {
         return React.createElement(
             "div",
             { className: "domoList" },
             React.createElement(
                 "h3",
                 { className: "emptyDomo" },
-                "No Domos yet"
+                "No Trips yet"
             )
         );
     }
 
-    var domoNodes = props.domos.map(function (domo) {
+    var tripNodes = props.trips.map(function (trip) {
+        console.dir(trip);
         return React.createElement(
             "div",
-            { key: domo._id, className: "domo" },
+            { key: trip._id, className: "domo" },
             React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
             React.createElement(
                 "h3",
                 { className: "domoName" },
-                "Name: ",
-                domo.name
+                "Title: ",
+                trip.title
             ),
             React.createElement(
                 "h3",
                 { className: "domoAge" },
-                "Age: ",
-                domo.age
+                "Location: ",
+                trip.location
             ),
             React.createElement(
                 "h3",
-                { className: "domoHeight" },
-                "Height: ",
-                domo.height
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoWeight" },
-                "Weight: ",
-                domo.weight
+                { className: "domoAge" },
+                "Details: ",
+                trip.details
             ),
             React.createElement(
                 "form",
                 { className: "delete", id: "deleteDomo", onSubmit: handleDelete },
-                React.createElement("input", { type: "hidden", name: "_id", value: domo._id }),
+                React.createElement("input", { type: "hidden", name: "_id", value: trip._id }),
                 React.createElement("input", { id: "token", type: "hidden", name: "_csrf", value: props.csrf }),
                 React.createElement("input", { style: { height: "20px" }, type: "image", src: "/assets/img/deleteButton.png", border: "0", alt: "Submit" })
             )
@@ -121,22 +116,23 @@ var DomoList = function DomoList(props) {
     return React.createElement(
         "div",
         { className: "domoList" },
-        domoNodes
+        tripNodes
     );
 };
 
-var loadDomosFromServer = function loadDomosFromServer(csrf) {
-    sendAjax('GET', '/getDomos', null, function (data) {
-        ReactDOM.render(React.createElement(DomoList, { domos: data.domos, csrf: csrf }), document.querySelector("#domos"));
+var loadTripsFromServer = function loadTripsFromServer(csrf) {
+    sendAjax('GET', '/getTrips', null, function (data) {
+        console.dir(data);
+        ReactDOM.render(React.createElement(TripList, { trips: data.trips, csrf: csrf }), document.querySelector("#domos"));
     });
 };
 
 var setup = function setup(csrf) {
-    ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
+    ReactDOM.render(React.createElement(TripForm, { csrf: csrf }), document.querySelector("#makeDomo"));
 
-    ReactDOM.render(React.createElement(DomoList, { domos: [], csrf: csrf }), document.querySelector("#domos"));
+    ReactDOM.render(React.createElement(TripList, { trips: [], csrf: csrf }), document.querySelector("#domos"));
 
-    loadDomosFromServer(csrf);
+    loadTripsFromServer(csrf);
 };
 
 var getToken = function getToken() {

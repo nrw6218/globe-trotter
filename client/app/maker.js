@@ -1,15 +1,15 @@
-const handleDomo = (e) => {
+const handleTrip = (e) => {
     e.preventDefault();
 
     $("#domoMessage").animate({width:'hide'},350);
 
-    if($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoHeight").val() == '' || $("#domoWeight").val() == '') {
-        handleError("RAWR! All fields are required");
+    if($("#tripTitle").val() == '' || $("#tripLocation").val() == '' || $("#tripDate").val() == '') {
+        handleError("All fields are required!");
         return false;
     }
 
     sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function() {
-        loadDomosFromServer($('token').val());
+        loadTripsFromServer($('token').val());
     });
 
     return false;
@@ -18,55 +18,55 @@ const handleDomo = (e) => {
 const handleDelete = (e) => {
     e.preventDefault();
 
-    sendAjax('POST', '/deleteDomo', $('#deleteDomo').serialize(), () => {
-        loadDomosFromServer($('token').val());
+    sendAjax('POST', '/deleteTrip', $('#deleteTrip').serialize(), () => {
+        loadTripsFromServer($('token').val());
     });
 
     return false;
 };
 
-const DomoForm = (props) => {
+const TripForm = (props) => {
     return (
         <form id="domoForm"
-            onSubmit={handleDomo}
-            name="domoForm"
+            onSubmit={handleTrip}
+            name="tripForm"
             action="/maker"
             method="POST"
             className="domoForm"
         >
-            <label htmlFor="name">Name: </label>
-            <input id="domoName" type="text" name="name" placeholder="Domo Name"/>
-            <label htmlFor="age">Age: </label>
-            <input id="domoAge" type="text" name="age" placeholder="Domo Age"/>
-            <label htmlFor="height">Height: </label>
-            <input id="domoHeight" type="text" name="height" placeholder="Domo Height"/>
-            <label htmlFor="weight">Weight: </label>
-            <input id="domoWeight" type="text" name="weight" placeholder="Domo Weight"/>
+            <label htmlFor="title">Name: </label>
+            <input id="tripTitle" type="text" name="title" placeholder="Title"/>
+            <label htmlFor="title">Location: </label>
+            <input id="tripLocation" type="text" name="location" placeholder="Location"/>
+            <label htmlFor="title">Details: </label>
+            <input id="tripDetails" type="text" name="details" placeholder="Details"/>
+            <label htmlFor="startDate">Date: </label>
+            <input id="tripDate" type="date" name="startDate"/>
             <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="makeDomoSubmit" type="submit" value="Make Domo"/>
+            <input className="makeDomoSubmit" type="submit" value="Make Trip"/>
         </form>
     );
 };
 
-const DomoList = function(props) {
-    if(props.domos.length === 0) {
+const TripList = function(props) {
+    if(props.trips.length === 0) {
         return (
             <div className="domoList">
-                <h3 className="emptyDomo">No Domos yet</h3>
+                <h3 className="emptyDomo">No Trips yet</h3>
             </div>
         );
     }
 
-    const domoNodes = props.domos.map(function(domo) {
+    const tripNodes = props.trips.map(function(trip) {
+        console.dir(trip);
         return (
-            <div key={domo._id} className="domo">
+            <div key={trip._id} className="domo">
                 <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace"/>
-                <h3 className="domoName">Name: {domo.name}</h3>
-                <h3 className="domoAge">Age: {domo.age}</h3>
-                <h3 className="domoHeight">Height: {domo.height}</h3>
-                <h3 className="domoWeight">Weight: {domo.weight}</h3>
+                <h3 className="domoName">Title: {trip.title}</h3>
+                <h3 className="domoAge">Location: {trip.location}</h3>
+                <h3 className="domoAge">Details: {trip.details}</h3>
                 <form className="delete" id="deleteDomo" onSubmit={handleDelete}>
-                    <input type="hidden" name="_id" value={domo._id} />
+                    <input type="hidden" name="_id" value={trip._id} />
                     <input id="token" type="hidden" name="_csrf" value={props.csrf} />
                     <input style={{height: "20px"}} type="image" src="/assets/img/deleteButton.png" border="0" alt="Submit" />
                 </form>
@@ -76,15 +76,16 @@ const DomoList = function(props) {
 
     return (
         <div className="domoList">
-            {domoNodes}
+            {tripNodes}
         </div>
     );
 };
 
-const loadDomosFromServer = (csrf) => {
-    sendAjax('GET', '/getDomos', null, (data) => {
+const loadTripsFromServer = (csrf) => {
+    sendAjax('GET', '/getTrips', null, (data) => {
+        console.dir(data);
         ReactDOM.render(
-            <DomoList domos={data.domos} csrf={csrf} />,
+            <TripList trips={data.trips} csrf={csrf} />,
             document.querySelector("#domos")
         );
     });
@@ -92,16 +93,16 @@ const loadDomosFromServer = (csrf) => {
 
 const setup = function(csrf) {
     ReactDOM.render(
-        <DomoForm csrf={csrf} />,
+        <TripForm csrf={csrf} />,
         document.querySelector("#makeDomo")
     );
 
     ReactDOM.render(
-        <DomoList domos={[]} csrf={csrf}/>,
+        <TripList trips={[]} csrf={csrf}/>,
         document.querySelector("#domos")
     );
 
-    loadDomosFromServer(csrf);
+    loadTripsFromServer(csrf);
 };
 
 const getToken = () => {
