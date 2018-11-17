@@ -1,4 +1,6 @@
-const mongoose = require('mongoose');
+const map = require('svg-world-map')
+const stringify = require('virtual-dom-stringify')
+ 
 mongoose.Promise = global.Promise;
 const _ = require('underscore');
 

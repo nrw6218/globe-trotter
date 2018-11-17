@@ -12,19 +12,41 @@ const makerPage = (req, res) => {
   });
 };
 
+const pinsPage = (req, res) => {
+  Trip.TripModel.findByOwner(req.session.account._id, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+
+    return res.render('pins', { csrfToken: req.csrfToken(), trips: docs });
+  });
+};
+
 const makeTrip = (req, res) => {
+  console.dir('MAKE TRIP');
   if (!req.body.title || !req.body.location || !req.body.startDate) {
     return res.status(400).json({ error: 'Trips need a title, location and date to be created.' });
   }
+
+  // Number of days
+  const oneDay = 24 * 60 * 60 * 1000;
+  const startDate = new Date(req.body.startDate);
+  const createdDate = new Date();
+  const days = Math.round(Math.abs(startDate.getTime() - createdDate.getTime()) / oneDay);
 
   const tripData = {
     title: req.body.title,
     details: req.body.details,
     location: req.body.location,
     startDate: req.body.startDate,
+    totalDays: days,
+    createdDate: req.body.createdDate,
     owner: req.session.account._id,
     _id: req.body._id,
   };
+
+  console.dir(tripData);
 
   const newTrip = new Trip.TripModel(tripData);
 
@@ -72,6 +94,7 @@ const getTrips = (request, response) => {
 };
 
 module.exports.makerPage = makerPage;
+module.exports.pinsPage = pinsPage;
 module.exports.getTrips = getTrips;
 module.exports.deleteTrip = deleteTrip;
 module.exports.make = makeTrip;

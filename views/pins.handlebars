@@ -12,16 +12,22 @@
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
   <link href="https://fonts.googleapis.com/css?family=Itim|Marck+Script|Pacifico|Roboto" rel="stylesheet">
 </head>
-<body> 
+<body>
   <nav>
     <a href="/login"><h3 class="logo">Globe-Trotter</h3></a>
+    <div class="navlink"><a href="/maker">Home</a></div>
+    <div class="navlink"><a href="/pins">Map</a></div>
+    <div class="navLink"><a href="/account">Account</a></div>
+    <div class="navlink"><a href="/logout">Log out</a></div>
   </nav>
-  <section id="content">
+  <section id="map">
   </section>
-  <footer>
-    <a href="http://www.whitesidedesign.com" target="_blank">WhitesideDesign.com</a>
-    <h3>&copy; 2018 Nikolas Whiteside</h3>
-  </footer>
-  <script src="/assets/loginBundle.js"></script>
+  <div id="tripMessage">
+    <h3><span id="errorMessage"></span></h3>
+  </div>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALhm4F0Dvo-qSe119iwDqyXFgMRF4ii-w&callback=initMap"
+    async defer></script>
+  <script src="/assets/pinsBundle.js"></script>
+  
 </body>
 </html>

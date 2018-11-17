@@ -51,7 +51,7 @@ app.use(session({
     port: redisURL.port,
     pass: redisPASS,
   }),
-  secret: 'Domo Arigato',
+  secret: 'trip Arigato',
   resave: true,
   saveUninitialized: true,
   cookie: {

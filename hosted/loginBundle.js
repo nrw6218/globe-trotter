@@ -3,7 +3,7 @@
 var handleLogin = function handleLogin(e) {
     e.preventDefault();
 
-    $("#domoMessage").animate({ width: "hide" }, 350);
+    $("#tripMessage").animate({ width: "hide" }, 350);
 
     if ($("#user").val() == '' || $("#pass").val() == '') {
         handleError("RAWR! Username or password is empty");
@@ -20,7 +20,7 @@ var handleLogin = function handleLogin(e) {
 var handleSignup = function handleSignup(e) {
     e.preventDefault();
 
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#tripMessage").animate({ width: 'hide' }, 350);
 
     if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("RAWR! All fields are required!");
@@ -57,10 +57,11 @@ var LoginWindow = function LoginWindow(props) {
             null,
             "Start charting your next adventure!"
         ),
-        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "Username" }),
-        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "Password" }),
+        React.createElement("input", { className: "formInput", id: "user", type: "text", name: "username", placeholder: "Username" }),
+        React.createElement("input", { className: "formInput", id: "pass", type: "password", name: "pass", placeholder: "Password" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "formSubmit", type: "submit", value: "Log in" }),
+        React.createElement("span", { id: "errorMessage" }),
         React.createElement(
             "p",
             { className: "signUpPrint" },
@@ -97,11 +98,12 @@ var SignupWindow = function SignupWindow(props) {
             null,
             "Start charting your next adventure!"
         ),
-        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "Username" }),
-        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "Password" }),
-        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "Retype Password" }),
+        React.createElement("input", { className: "formInput", id: "user", type: "text", name: "username", placeholder: "Username" }),
+        React.createElement("input", { className: "formInput", id: "pass", type: "password", name: "pass", placeholder: "Password" }),
+        React.createElement("input", { className: "formInput", id: "pass2", type: "password", name: "pass2", placeholder: "Retype Password" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "formSubmit", type: "submit", value: "Sign Up" }),
+        React.createElement("span", { id: "errorMessage" }),
         React.createElement(
             "p",
             { className: "signUpPrint" },
@@ -149,11 +151,9 @@ $(document).ready(function () {
 
 var handleError = function handleError(message) {
     $("#errorMessage").text(message);
-    $("#domoMessage").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {
-    $("#domoMessage").animate({ width: 'hide' }, 350);
     window.location = response.redirect;
 };
 

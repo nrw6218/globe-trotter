@@ -1,7 +1,7 @@
 const handleLogin = (e) => {
     e.preventDefault();
 
-    $("#domoMessage").animate({width:"hide"},350);
+    $("#tripMessage").animate({width:"hide"},350);
 
     if($("#user").val() == '' || $("#pass").val() == '') {
         handleError("RAWR! Username or password is empty");
@@ -18,7 +18,7 @@ const handleLogin = (e) => {
 const handleSignup = (e) => {
     e.preventDefault();
 
-    $("#domoMessage").animate({width:'hide'},350);
+    $("#tripMessage").animate({width:'hide'},350);
 
     if($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("RAWR! All fields are required!");
@@ -48,10 +48,11 @@ const LoginWindow = (props) => {
             <p>
                 Start charting your next adventure!
             </p>
-            <input id="user" type="text" name="username" placeholder="Username"/>
-            <input id="pass" type="password" name="pass" placeholder="Password"/>
+            <input className="formInput" id="user" type="text" name="username" placeholder="Username"/>
+            <input className="formInput" id="pass" type="password" name="pass" placeholder="Password"/>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className="formSubmit" type="submit" value="Log in"/>
+            <span id="errorMessage"></span>
             <p className="signUpPrint">Don't have an account? <a id="signupButton" href="/signup" onClick={e => setUpSignupWindow(e, props.csrf)}>Sign up</a>!</p>
         </form>
     );
@@ -70,11 +71,12 @@ const SignupWindow = (props) => {
             <p>
                 Start charting your next adventure!
             </p>
-            <input id="user" type="text" name="username" placeholder="Username"/>
-            <input id="pass" type="password" name="pass" placeholder="Password"/>
-            <input id="pass2" type="password" name="pass2" placeholder="Retype Password"/>
+            <input className="formInput" id="user" type="text" name="username" placeholder="Username"/>
+            <input className="formInput" id="pass" type="password" name="pass" placeholder="Password"/>
+            <input className="formInput" id="pass2" type="password" name="pass2" placeholder="Retype Password"/>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className="formSubmit" type="submit" value="Sign Up"/>
+            <span id="errorMessage"></span>
             <p className="signUpPrint">Already have an account? <a id="loginButton" href="/login" onClick={e => setUpLoginWindow(e, props.csrf)}>Log in</a>!</p>
         </form>
     );

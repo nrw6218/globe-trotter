@@ -11,6 +11,10 @@ const logout = (req, res) => {
   res.redirect('/');
 };
 
+const settingsPage = (req, res) => {
+  res.render('settings', { csrfToken: req.csrfToken() });
+};
+
 const login = (request, response) => {
   const req = request;
   const res = response;
@@ -77,19 +81,61 @@ const signup = (request, response) => {
   });
 };
 
+const passwordChange = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const password = `${req.body.pass}`;
+  const newPassword = `${req.body.newpass}`;
+  const newPasswordCopy = `${req.body.newpass2}`;
+
+  if (!password || !newPassword || !newPasswordCopy ) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  if (newPassword != newPasswordCopy) {
+    return res.status(400).json({ error: 'Passwords do not match' });
+  }
+
+  if (password === newPassword) {
+    return res.status(400).json({ error: 'New password cannot match the old password' });
+  }
+
+  console.dir(newPassword);
+
+  return Account.AccountModel.generateHash(req.body.newpass, (salt, hash) => {
+    const accountData = {
+      username: req.session.account.username,
+      salt,
+      password: hash,
+    };
+
+    return Account.AccountModel.updatePassword(accountData, (err, account) => {
+      if (err || !account) {
+        return res.status(401).json({ error: 'Wrong password' });
+      }
+
+      return res.json({ redirect: '/logout' });
+    });
+  });
+};
+
 const getToken = (request, response) => {
   const req = request;
   const res = response;
 
   const csrfJSON = {
     csrfToken: req.csrfToken(),
+    user: req.session.account,
   };
 
   res.json(csrfJSON);
 };
 
 module.exports.loginPage = loginPage;
+module.exports.settingsPage = settingsPage;
 module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
+module.exports.passwordChange = passwordChange;
 module.exports.getToken = getToken;
