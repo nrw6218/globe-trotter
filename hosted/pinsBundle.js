@@ -60,7 +60,6 @@ var TripMap = function TripMap(props) {
     }
 
     var tripNodes = props.trips.map(function (trip) {
-        console.dir(trip._id);
         return React.createElement(
             'div',
             { key: trip._id, className: 'trip' },
@@ -123,7 +122,6 @@ var loadTripsFromServer = function loadTripsFromServer(csrf) {
         var _loop = function _loop(i) {
             geocoder.geocode({ 'address': data.trips[i].location }, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
-                    console.dir(results);
                     var marker = new google.maps.Marker({
                         position: results[0].geometry.location,
                         map: map,

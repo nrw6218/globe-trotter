@@ -10,7 +10,6 @@ var handleTrip = function handleTrip(e) {
         return false;
     }
 
-    console.dir($('#tripDate').val());
     sendAjax('POST', $("#tripForm").attr("action"), $("#tripForm").serialize(), function () {
         loadTripsFromServer($('token').val());
     });
@@ -154,104 +153,79 @@ $(document).ready(function () {
 });
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var CircularProgressBar = function CircularProgressBar(props) {
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  //Number of seconds in a day
+  var oneDay = 24 * 60 * 60 * 1000;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  // Size of the enclosing square
+  var sqSize = props.sqSize;
+  // SVG centers the stroke width on the radius, subtract out so circle fits in square
+  var radius = (props.sqSize - props.strokeWidth) / 2;
+  // Enclose cicle in a circumscribing square
+  var viewBox = "0 0 " + sqSize + " " + sqSize;
+  // Arc length at 100% coverage is the circle circumference
+  var dashArray = radius * Math.PI * 2;
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CircularProgressBar = function (_React$Component) {
-  _inherits(CircularProgressBar, _React$Component);
-
-  function CircularProgressBar(props) {
-    _classCallCheck(this, CircularProgressBar);
-
-    var _this = _possibleConstructorReturn(this, (CircularProgressBar.__proto__ || Object.getPrototypeOf(CircularProgressBar)).call(this, props));
-
-    _this.state = {};
-    return _this;
+  //Dates
+  var start_date = new Date(props.start);
+  var current_date = new Date();
+  var daysLeft = void 0;
+  var dashOffset = void 0;
+  var measure = void 0;
+  if (start_date.getTime() - current_date.getTime() > 0) {
+    daysLeft = Math.round(Math.abs(start_date.getTime() - current_date.getTime()) / oneDay);
+    dashOffset = dashArray - dashArray * (Math.abs(daysLeft - props.total) / props.total);
+  } else {
+    daysLeft = 0;
+    dashOffset = 0;
   }
 
-  _createClass(CircularProgressBar, [{
-    key: "render",
-    value: function render() {
-      //Number of seconds in a day
-      var oneDay = 24 * 60 * 60 * 1000;
+  if (daysLeft > 1) {
+    measure = "days";
+  } else if (daysLeft == 1) {
+    measure = "day";
+  } else {
+    measure = "";
+  }
 
-      // Size of the enclosing square
-      var sqSize = this.props.sqSize;
-      // SVG centers the stroke width on the radius, subtract out so circle fits in square
-      var radius = (this.props.sqSize - this.props.strokeWidth) / 2;
-      // Enclose cicle in a circumscribing square
-      var viewBox = "0 0 " + sqSize + " " + sqSize;
-      // Arc length at 100% coverage is the circle circumference
-      var dashArray = radius * Math.PI * 2;
-
-      //Dates
-      var start_date = new Date(this.props.start);
-      var current_date = new Date();
-      var daysLeft = void 0;
-      var dashOffset = void 0;
-      var measure = void 0;
-      if (start_date.getTime() - current_date.getTime() > 0) {
-        daysLeft = Math.round(Math.abs(start_date.getTime() - current_date.getTime()) / oneDay);
-        dashOffset = dashArray - dashArray * (Math.abs(daysLeft - this.props.total) / this.props.total);
-      } else {
-        daysLeft = 0;
-        dashOffset = 0;
-      }
-
-      if (daysLeft > 1) {
-        measure = "days";
-      } else if (daysLeft == 1) {
-        measure = "day";
-      } else {
-        measure = "";
-      }
-
-      return React.createElement(
-        "svg",
-        {
-          width: this.props.sqSize,
-          height: this.props.sqSize,
-          viewBox: viewBox },
-        React.createElement("circle", {
-          className: "circle-background",
-          cx: this.props.sqSize / 2,
-          cy: this.props.sqSize / 2,
-          r: radius,
-          strokeWidth: this.props.strokeWidth + "px" }),
-        React.createElement("circle", {
-          className: "circle-progress",
-          cx: this.props.sqSize / 2,
-          cy: this.props.sqSize / 2,
-          r: radius,
-          strokeWidth: this.props.strokeWidth + "px"
-          // Start progress marker at 12 O'Clock
-          , transform: "rotate(-90 " + this.props.sqSize / 2 + " " + this.props.sqSize / 2 + ")",
-          style: {
-            stroke: daysLeft > 0 ? this.props.color : "rgba(150,206,180,1)",
-            strokeDasharray: dashArray,
-            strokeDashoffset: dashOffset
-          } }),
-        React.createElement(
-          "text",
-          {
-            className: "circle-text",
-            x: "50%",
-            y: "50%",
-            dy: ".3em",
-            textAnchor: "middle" },
-          (daysLeft > 0 ? daysLeft : 'CHARTED') + " " + measure
-        )
-      );
-    }
-  }]);
-
-  return CircularProgressBar;
-}(React.Component);
+  return React.createElement(
+    "svg",
+    {
+      width: props.sqSize,
+      height: props.sqSize,
+      viewBox: viewBox },
+    React.createElement("circle", {
+      className: "circle-background",
+      cx: props.sqSize / 2,
+      cy: props.sqSize / 2,
+      r: radius,
+      strokeWidth: props.strokeWidth + "px" }),
+    React.createElement("circle", {
+      className: "circle-progress",
+      cx: props.sqSize / 2,
+      cy: props.sqSize / 2,
+      r: radius,
+      strokeWidth: props.strokeWidth + "px"
+      // Start progress marker at 12 O'Clock
+      , transform: "rotate(-90 " + props.sqSize / 2 + " " + props.sqSize / 2 + ")",
+      style: {
+        stroke: daysLeft > 0 ? props.color : "rgba(150,206,180,1)",
+        strokeDasharray: dashArray,
+        strokeDashoffset: dashOffset
+      } }),
+    React.createElement(
+      "text",
+      {
+        className: "circle-text",
+        x: "50%",
+        y: "50%",
+        dy: ".3em",
+        textAnchor: "middle" },
+      (daysLeft > 0 ? daysLeft : 'CHARTED') + " " + measure
+    )
+  );
+};
 "use strict";
 
 var handleError = function handleError(message) {

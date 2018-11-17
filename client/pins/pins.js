@@ -55,7 +55,6 @@ const TripMap = function(props) {
     }
 
     const tripNodes = props.trips.map(function(trip) {
-        console.dir(trip._id);
         return (
             <div key={trip._id} className="trip">
                 <CircularProgressBar sqSize={200} strokeWidth={15} start={trip.startDate} total={trip.totalDays} title={trip.title}/>
@@ -102,8 +101,7 @@ const loadTripsFromServer = (csrf) => {
         geocoder =  new google.maps.Geocoder();
         for(let i = 0; i < data.trips.length; i++) {
             geocoder.geocode( { 'address': data.trips[i].location }, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    console.dir(results);
+                if (status === google.maps.GeocoderStatus.OK) {
                     let marker = new google.maps.Marker({
                         position: results[0].geometry.location,
                         map: map,

@@ -8,7 +8,6 @@ const handleTrip = (e) => {
         return false;
     }
 
-    console.dir($('#tripDate').val());
     sendAjax('POST', $("#tripForm").attr("action"), $("#tripForm").serialize(), function() {
         loadTripsFromServer($('token').val());
     });

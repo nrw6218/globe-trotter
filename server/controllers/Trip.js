@@ -24,7 +24,6 @@ const pinsPage = (req, res) => {
 };
 
 const makeTrip = (req, res) => {
-  console.dir('MAKE TRIP');
   if (!req.body.title || !req.body.location || !req.body.startDate) {
     return res.status(400).json({ error: 'Trips need a title, location and date to be created.' });
   }
@@ -45,8 +44,6 @@ const makeTrip = (req, res) => {
     owner: req.session.account._id,
     _id: req.body._id,
   };
-
-  console.dir(tripData);
 
   const newTrip = new Trip.TripModel(tripData);
 
