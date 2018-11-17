@@ -1,3 +1,6 @@
+/*
+    Handles the creation of a new trip
+*/
 const handleTrip = (e) => {
     e.preventDefault();
 
@@ -15,6 +18,9 @@ const handleTrip = (e) => {
     return false;
 };
 
+/*
+    Handles the deletion of a trip
+*/
 const handleDelete = (e) => {
     e.preventDefault();
 
@@ -25,6 +31,9 @@ const handleDelete = (e) => {
     return false;
 };
 
+/*
+    Handles the creation of the Trip Form which allows the user to add a new trip to their account
+*/
 const TripForm = (props) => {
     return (
         <form id="tripForm"
@@ -45,6 +54,9 @@ const TripForm = (props) => {
     );
 };
 
+/*
+    Creates a list of trip objects to display in the maker
+*/
 const TripList = function(props) {
     if(props.trips.length === 0) {
         return (
@@ -76,6 +88,7 @@ const TripList = function(props) {
         );
     });
 
+    // Returns the list of trips PLUS a sample of an advertisement in the application
     return (
         <div className="tripList">
             {tripNodes}    
@@ -90,6 +103,9 @@ const TripList = function(props) {
     );
 };
 
+/*
+    Loads the trips for the specified user from the server
+*/
 const loadTripsFromServer = (csrf) => {
     sendAjax('GET', '/getTrips', null, (data) => {
         ReactDOM.render(
@@ -99,6 +115,9 @@ const loadTripsFromServer = (csrf) => {
     });
 };
 
+/*
+    Handles initial page setup
+*/
 const setup = function(csrf) {
     ReactDOM.render(
         <TripForm csrf={csrf} />,
@@ -113,6 +132,9 @@ const setup = function(csrf) {
     loadTripsFromServer(csrf);
 };
 
+/*
+    Gets the token for the current user
+*/
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);

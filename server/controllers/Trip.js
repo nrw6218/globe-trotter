@@ -1,6 +1,9 @@
 const models = require('../models');
 const Trip = models.Trip;
 
+/*
+  Handles rendering of the main app page
+*/
 const makerPage = (req, res) => {
   Trip.TripModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
@@ -12,6 +15,9 @@ const makerPage = (req, res) => {
   });
 };
 
+/*
+  Handles the rendering of the map/pins page
+*/
 const pinsPage = (req, res) => {
   Trip.TripModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
@@ -23,6 +29,9 @@ const pinsPage = (req, res) => {
   });
 };
 
+/*
+  Valiadates trip information and redirects the user
+*/
 const makeTrip = (req, res) => {
   if (!req.body.title || !req.body.location || !req.body.startDate) {
     return res.status(400).json({ error: 'Trips need a title, location and date to be created.' });
@@ -63,6 +72,9 @@ const makeTrip = (req, res) => {
   return tripPromise;
 };
 
+/*
+  Handles deletion of a trip
+*/
 const deleteTrip = (request, response) => {
   const req = request;
   const res = response;
@@ -76,6 +88,9 @@ const deleteTrip = (request, response) => {
   });
 };
 
+/*
+  Receives all trips corresponding to a particular user
+*/
 const getTrips = (request, response) => {
   const req = request;
   const res = response;

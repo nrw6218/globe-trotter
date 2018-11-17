@@ -1,5 +1,8 @@
 "use strict";
 
+/*
+    Handles the creation of a new trip
+*/
 var handleTrip = function handleTrip(e) {
     e.preventDefault();
 
@@ -17,6 +20,9 @@ var handleTrip = function handleTrip(e) {
     return false;
 };
 
+/*
+    Handles the deletion of a trip
+*/
 var handleDelete = function handleDelete(e) {
     e.preventDefault();
 
@@ -27,6 +33,9 @@ var handleDelete = function handleDelete(e) {
     return false;
 };
 
+/*
+    Handles the creation of the Trip Form which allows the user to add a new trip to their account
+*/
 var TripForm = function TripForm(props) {
     return React.createElement(
         "form",
@@ -47,6 +56,9 @@ var TripForm = function TripForm(props) {
     );
 };
 
+/*
+    Creates a list of trip objects to display in the maker
+*/
 var TripList = function TripList(props) {
     if (props.trips.length === 0) {
         return React.createElement(
@@ -96,6 +108,7 @@ var TripList = function TripList(props) {
         );
     });
 
+    // Returns the list of trips PLUS a sample of an advertisement in the application
     return React.createElement(
         "div",
         { className: "tripList" },
@@ -128,12 +141,18 @@ var TripList = function TripList(props) {
     );
 };
 
+/*
+    Loads the trips for the specified user from the server
+*/
 var loadTripsFromServer = function loadTripsFromServer(csrf) {
     sendAjax('GET', '/getTrips', null, function (data) {
         ReactDOM.render(React.createElement(TripList, { trips: data.trips, csrf: csrf }), document.querySelector("#trips"));
     });
 };
 
+/*
+    Handles initial page setup
+*/
 var setup = function setup(csrf) {
     ReactDOM.render(React.createElement(TripForm, { csrf: csrf }), document.querySelector("#maketrip"));
 
@@ -142,6 +161,9 @@ var setup = function setup(csrf) {
     loadTripsFromServer(csrf);
 };
 
+/*
+    Gets the token for the current user
+*/
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
         setup(result.csrfToken);
@@ -153,6 +175,8 @@ $(document).ready(function () {
 });
 "use strict";
 
+//Original code from https://codepen.io/bbrady/pen/ozrjKE
+//Code extended and updated by Nikolas Whiteside
 var CircularProgressBar = function CircularProgressBar(props) {
 
   //Number of seconds in a day

@@ -1,3 +1,5 @@
+//Original code from https://codepen.io/bbrady/pen/ozrjKE
+//Code extended and updated by Nikolas Whiteside
 const CircularProgressBar = (props) => {
 
   //Number of seconds in a day

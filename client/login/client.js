@@ -1,3 +1,6 @@
+/*
+    Handles user login
+*/
 const handleLogin = (e) => {
     e.preventDefault();
 
@@ -15,6 +18,9 @@ const handleLogin = (e) => {
     return false;
 }
 
+/*
+    Handles user signup
+*/
 const handleSignup = (e) => {
     e.preventDefault();
 
@@ -35,6 +41,9 @@ const handleSignup = (e) => {
     return false;
 };
 
+/*
+    Generates the login form
+*/
 const LoginWindow = (props) => {
     return (
         <form id="loginForm" 
@@ -58,6 +67,9 @@ const LoginWindow = (props) => {
     );
 };
 
+/*
+    Generates the signup form
+*/
 const SignupWindow = (props) => {
     return (
         <form id="signupForm" 
@@ -82,6 +94,9 @@ const SignupWindow = (props) => {
     );
 };
 
+/*
+    Renders the login form to the screen
+*/
 const createLoginWindow = (csrf) => {
     ReactDOM.render(
         <LoginWindow csrf={csrf} />,
@@ -89,6 +104,9 @@ const createLoginWindow = (csrf) => {
     );
 };
 
+/*
+    Renders the signup form to the screen
+*/
 const createSignupWindow = (csrf) => {
     ReactDOM.render(
         <SignupWindow csrf={csrf} />,
@@ -96,16 +114,25 @@ const createSignupWindow = (csrf) => {
     );
 };
 
+/*
+    Initial setup of signup window
+*/
 const setUpSignupWindow = (e, csrf) => {
     e.preventDefault();
     createSignupWindow(csrf);
 }
 
+/*
+    Initial setup of login window
+*/
 const setUpLoginWindow = (e, csrf) => {
     e.preventDefault();
     createLoginWindow(csrf);
 }
 
+/*
+    Gets the token for the current user
+*/
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         createLoginWindow(result.csrfToken);

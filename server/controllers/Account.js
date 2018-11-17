@@ -2,19 +2,31 @@ const models = require('../models');
 
 const Account = models.Account;
 
+/*
+  Renders a login page
+*/
 const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
+/*
+  Logs the user out and redirects them to the login scren
+*/
 const logout = (req, res) => {
   req.session.destroy();
   res.redirect('/');
 };
 
+/*
+  Renders the account settings page
+*/
 const settingsPage = (req, res) => {
   res.render('settings', { csrfToken: req.csrfToken() });
 };
 
+/*
+  Authenticates the user profile and redirects them to the appropriate page
+*/
 const login = (request, response) => {
   const req = request;
   const res = response;
@@ -37,6 +49,9 @@ const login = (request, response) => {
   });
 };
 
+/*
+  Validates signup information and redirects the user
+*/
 const signup = (request, response) => {
   const req = request;
   const res = response;
@@ -81,6 +96,10 @@ const signup = (request, response) => {
   });
 };
 
+/*
+  Validates the new password against the current and redirects them
+  to sign back in
+*/
 const passwordChange = (request, response) => {
   const req = request;
   const res = response;
@@ -118,6 +137,9 @@ const passwordChange = (request, response) => {
   });
 };
 
+/*
+  Returns the csrf tokrn and user account
+*/
 const getToken = (request, response) => {
   const req = request;
   const res = response;
